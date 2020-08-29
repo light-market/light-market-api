@@ -1,14 +1,18 @@
+require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParcer = require('body-parser')
 const app = express()
-const port = 3000
+
+//read port from env file
+const port = process.env.PORT;
 const api = '/api'
 var cors = require('cors')
 app.use(cors())
 app.use(bodyParcer.json());
 const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
+const faqs =require('./controllers/faq.controller')
 
 // connection to mongodb
 const db = require('./models/index')
@@ -34,5 +38,11 @@ app.post(api + '/products/:type', products.create)
 app.get(api + '/products/:category', products.findAll)
 app.delete(api + '/products/:id', products.delete)
 app.put(api + '/products/:id', products.update)
+
+//faq apis
+app.post(api + '/faq',faqs.create)
+app.get(api + '/faq/:access',faqs.findAll)
+app.put(api + '/faq/:id',faqs.update)
+app.delete(api + '/faq/:id',faqs.delete)
 
 app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))

@@ -1,3 +1,3 @@
 module.exports = {
-    url: "mongodb://localhost/light-market"
+    url: process.env.DB_URL
 }

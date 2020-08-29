@@ -3,6 +3,7 @@ const Product = db.products;
 
 //create new product 
 exports.create = (req, res) => {
+    //req.body all
     const product = new Product({
         type: req.params.type,
         name: req.body.name,
@@ -15,8 +16,9 @@ exports.create = (req, res) => {
     product.save(product).then(data => {
         res.send(data);
     }).catch(err => {
-        res.send({
-            message: "There Is Error In Saving Product"
+        //search most common http status code
+        res.status(400).send({
+            message: "There Is Error In Saving Product"+err
         })
     })
 }

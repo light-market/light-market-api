@@ -14,8 +14,14 @@ exports.create = async(req, res) => {
             message: 'Email Already Exist'
         })
     }
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = bcrypt.hash(req.body.password,salt);
+    /*const salt = bcrypt.genSalt(10);
+    const hashPassword = bcrypt.hash(req.body.password,salt);*/
+    const salt =10;
+    bcrypt.genSalt(salt,(err,salt)=>{
+        bcrypt.hash(req.body.password,salt,(err,hash)=>{
+            const hashPassword= hash;
+        })
+    })
     const user = new User({
         username: req.body.username,
         email: req.body.email,

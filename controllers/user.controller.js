@@ -17,9 +17,9 @@ exports.create = async(req, res) => {
     /*const salt = bcrypt.genSalt(10);
     const hashPassword = bcrypt.hash(req.body.password,salt);*/
     const salt =10;
-    bcrypt.genSalt(salt,(err,salt)=>{
-        bcrypt.hash(req.body.password,salt,(err,hash)=>{
-            const hashPassword= hash;
+    bcrypt.genSalt(salt,function(err,salt){
+        bcrypt.hash(req.body.password,salt,function(err,hash){
+            const hashPassword= hash
         })
     })
     const user = new User({

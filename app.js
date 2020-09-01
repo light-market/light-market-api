@@ -2,9 +2,8 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 const bodyParcer = require('body-parser')
+const jwt = require('jsonwebtoken')
 const app = express()
-
-//read port from env file
 const port = process.env.PORT||3000;
 const api = '/api'
 var cors = require('cors')
@@ -13,6 +12,7 @@ app.use(bodyParcer.json());
 const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
 const faqs =require('./controllers/faq.controller')
+const users =require('./controllers/user.controller')
 
 // connection to mongodb
 const db = require('./models/index')
@@ -44,6 +44,11 @@ app.post(api + '/faq',faqs.create)
 app.get(api + '/faq/:access',faqs.findAll)
 app.put(api + '/faq/:id',faqs.update)
 app.delete(api + '/faq/:id',faqs.delete)
+
+// users api
+app.post(api + '/register',users.create)
+app.post(api + '/login',users.login)
+
 
 app.listen(port,'0.0.0.0',()=>{
     console.log("server is listening on "+port+" port");

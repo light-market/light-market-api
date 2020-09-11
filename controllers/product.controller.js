@@ -12,6 +12,7 @@ exports.create = (req, res) => {
         quantity: req.body.quantity,
         price: req.body.price,
         secondPrice: req.body.secondPrice
+        
     })
     product.save(product).then(data => {
         res.send(data);

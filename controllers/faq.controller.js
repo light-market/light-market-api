@@ -40,6 +40,7 @@ exports.findAll = (req, res) => {
         }).catch(err => {
             res.send({
                 message: "There Is Error In Retreveing Questions"
+                
             })
         })
 

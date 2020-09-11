@@ -14,6 +14,7 @@ const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
 const faqs =require('./controllers/faq.controller')
 
+
 // connection to mongodb
 const db = require('./models/index')
 db.mongoose.connect(db.url, {

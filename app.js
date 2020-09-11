@@ -13,6 +13,7 @@ const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
 const faqs =require('./controllers/faq.controller')
 const users =require('./controllers/user.controller')
+const carts = require('./controllers/cart.controller')
 
 // connection to mongodb
 const db = require('./models/index')
@@ -48,8 +49,16 @@ app.delete(api + '/faq/:id',faqs.delete)
 // users api
 app.post(api + '/register',users.create)
 app.post(api + '/login',users.login)
+// cart api 
+app.post (api + '/cart',carts.update)
+app.get (api + '/cart',carts.findAll)
 
 
-app.listen(port,'0.0.0.0',()=>{
+
+/*app.listen(port,'0.0.0.0',()=>{
     console.log("server is listening on "+port+" port");
 })
+*/
+app.listen(3000, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })

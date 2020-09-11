@@ -4,10 +4,10 @@ const User = db.users;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 
-function generateAccessToken(username,email){
-    return jwt.sign({username : username , email:email},process.env.TOKEN_SECRET,{expiresIn:'15m'});
+function generateAccessToken(email,id) {
+    return jwt.sign({email: email ,id:id}, process.env.TOKEN_SECRET);
 }
-exports.create = async(req, res) => {
+exports.create = async (req, res) => {
     const emailExist = await User.findOne({ email: req.body.email });
     if (emailExist) {
         return res.status(400).send({
@@ -16,41 +16,39 @@ exports.create = async(req, res) => {
     }
     /*const salt = bcrypt.genSalt(10);
     const hashPassword = bcrypt.hash(req.body.password,salt);*/
-    const salt =10;
-    bcrypt.genSalt(salt,function(err,salt){
-        bcrypt.hash(req.body.password,salt,function(err,hash){
-            const hashPassword= hash
-        })
-    })
+
+    const saltRounds = 10;
+    const salt = bcrypt.genSaltSync(saltRounds);
+    const hash = bcrypt.hashSync(req.body.password, salt);
     const user = new User({
         username: req.body.username,
         email: req.body.email,
-        password: hashPassword
+        password: hash
     });
     user.save(user).then(data => {
-        const token=generateAccessToken(data.username,data.email);
+        const token = generateAccessToken(data.email,data._id);
         res.send({
-            accessToken : token 
+            accessToken: token
         });
     }).catch(err => {
         res.status(400).send(err);
     })
 }
-exports.login = async(req,res)=>{
-    const user = await User.findOne({email:req.body.email});
+exports.login = async (req, res) => {
+    const user = await User.findOne({ email: req.body.email });
     if (!user) {
-        res.status(400).send({
-            message : 'Invalid Email Or Password'
+        return res.status(400).send({
+            message: 'Invalid Email Or Password'
         })
     }
-    const vaildPass = await bcrypt.compare(req.body.password,user.password);
-    if(!vaildPass){
-        res.status(400).send({
-            message : 'Invalid Email Or Password' 
+    const vaildPass = await bcrypt.compare(req.body.password, user.password);
+    if (!vaildPass) {
+        return res.status(400).send({
+            message: 'Invalid Email Or Password'
         })
     }
-    const token=generateAccessToken(user.username,user.email);
+    const token = generateAccessToken(user.email ,user._id);
     res.send({
-        accessToken : token
+        accessToken: token
     })
 }

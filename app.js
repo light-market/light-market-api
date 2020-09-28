@@ -55,10 +55,10 @@ app.get (api + '/cart',carts.findAll)
 
 
 
-/*app.listen(port,'0.0.0.0',()=>{
+app.listen(port,'0.0.0.0',()=>{
     console.log("server is listening on "+port+" port");
 })
-*/
-app.listen(3000, () => {
+
+/*app.listen(3000, () => {
     console.log(`Example app listening at http://localhost:${port}`)
-  })
+  })*/

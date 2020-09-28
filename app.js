@@ -4,7 +4,7 @@ const mongoose = require('mongoose')
 const bodyParcer = require('body-parser')
 const jwt = require('jsonwebtoken')
 const app = express()
-const port = process.env.PORT;
+const port = process.env.PORT||3000;
 const api = '/api'
 var cors = require('cors')
 app.use(cors())

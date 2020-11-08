@@ -4,8 +4,8 @@ const User = db.users;
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken')
 
-function generateAccessToken(email,id) {
-    return jwt.sign({email: email ,id:id}, process.env.TOKEN_SECRET);
+function generateAccessToken(email, username, role, id) {
+    return jwt.sign({ email: email, id: id, username: username, role: role }, process.env.TOKEN_SECRET);
 }
 exports.create = async (req, res) => {
     const emailExist = await User.findOne({ email: req.body.email });
@@ -26,7 +26,7 @@ exports.create = async (req, res) => {
         password: hash
     });
     user.save(user).then(data => {
-        const token = generateAccessToken(data.email,data._id);
+        const token = generateAccessToken(data.email, data._id);
         res.send({
             accessToken: token
         });
@@ -47,7 +47,7 @@ exports.login = async (req, res) => {
             message: 'Invalid Email Or Password'
         })
     }
-    const token = generateAccessToken(user.email ,user._id);
+    const token = generateAccessToken(user.email, user.username, user.role, user._id);
     res.send({
         accessToken: token
     })

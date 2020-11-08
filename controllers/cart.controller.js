@@ -20,7 +20,7 @@ exports.update = (req, res) => {
                         const cart = new Cart({
                             userId: data.id,
                             products: req.body.products,
-                            active: false,
+                            status: 'ordered',
                             totalPrice: req.body.totalPrice,
                             date: Date.now()
 
@@ -29,8 +29,8 @@ exports.update = (req, res) => {
                             res.send({
                                 message: "Card Saved Successfully"
                             })
-                            
-                        }).catch(err=>{
+
+                        }).catch(err => {
                             res.status(400).send({
                                 message: "Error in Saving Cart"
                             })
@@ -79,22 +79,22 @@ exports.findAll = (req, res) => {
                 let cart = [];
                 let quantities = [];
                 Cart.findOne({ userId: dataT.id }).populate("products.productID").then(data => {
-                    for (i=0;i<data.products.length;i++){
+                    for (i = 0; i < data.products.length; i++) {
                         cart.push(data.products[i].productID);
                         quantities.push({
-                            productID : data.products[i].productID.id,
-                            quantity : data.products[i].quantity
+                            productID: data.products[i].productID.id,
+                            quantity: data.products[i].quantity
                         })
 
                     }
                     res.send({
-                        cart : cart,
-                        quantities : quantities,
-                        totalPrice :data.totalPrice
+                        cart: cart,
+                        quantities: quantities,
+                        totalPrice: data.totalPrice
                     })
                 }).catch(err => {
                     res.status(400).send({
-                        message : "There is error happend"
+                        message: "There is error happend"
                     })
                 })
             }
@@ -102,4 +102,13 @@ exports.findAll = (req, res) => {
 
     }
 
+}
+exports.adminFindAll = (req, res) => {
+    Cart.find().populate("products.productID").then(data => {
+        res.send(data);
+    }).catch(err => {
+        res.status(400).send({
+            message: 'There is error in retrieveing orders'
+        })
+    })
 }

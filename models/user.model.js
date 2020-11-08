@@ -7,6 +7,11 @@ module.exports = mongoose => {
             date : {
                 type : Date,
                 default : Date.now
+            },
+            role :{
+                type : String,
+                default : "user"
+
             }
         })
     )

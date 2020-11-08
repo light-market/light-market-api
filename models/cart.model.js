@@ -7,23 +7,23 @@ module.exports = mongoose => {
         "cart", mongoose.Schema({
             userId: String,
             products: [{
-                quantity : Number,
-                productID : {
-                    type : Schema.Types.ObjectId,
+                quantity: Number,
+                productID: {
+                    type: Schema.Types.ObjectId,
                     ref: "product"
                 }
             }],
-            /*products:[{
-                type : Schema.Types.ObjectId,
-                ref: "product"
-            }],*/
-            active : Boolean,
+            status: String,
             totalPrice: Number,
             date: {
                 type: Date,
-            }
-
-
+            },
+            deliveryDate: {
+                type: Date,
+            },
+            comments: [{
+                type: String
+            }]
         })
     )
     return Cart;

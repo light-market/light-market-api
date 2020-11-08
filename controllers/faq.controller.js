@@ -1,6 +1,8 @@
 const db = require('../models')
 const Faq = db.faqs;
-
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
+const middlewares = require('../middlewares/middlewares')
 //create new faq
 exports.create = (req, res) => {
     const faq = new Faq({
@@ -22,11 +24,9 @@ exports.create = (req, res) => {
 }
 // reterive questions for admin 
 exports.findAll = (req, res) => {
-    const access = req.params.access;
-    const offset = +req.query.offset;
-    const limit = +req.query.limit;
-    if (access === 'admin') {
-        Faq.find({ isShown: false }).skip(offset).limit(limit).then(data => {
+    const token = req.header('adminToken');
+    if (!token) {
+        Faq.find({ isShown: true }).then(data => {
             res.send(data)
         }).catch(err => {
             res.send({
@@ -35,15 +35,41 @@ exports.findAll = (req, res) => {
         })
     }
     else {
-        Faq.find({ isShown: true }).skip(offset).limit(limit).then(data => {
-            res.send(data)
-        }).catch(err => {
-            res.send({
-                message: "There Is Error In Retreveing Questions"
-            })
-        })
+        jwt.verify(token, process.env.TOKEN_SECRET, function (err, data) {
+            if (err) {
+                Faq.find({ isShown: true }).then(data => {
+                    res.send(data)
+                }).catch(err => {
+                    res.send({
+                        message: "There Is Error In Retreveing Questions"
+                    })
+                })
+            }
+            else {
+                if (data.role !== 'admin') {
+                    Faq.find({ isShown: true }).then(data => {
+                        res.send(data)
+                    }).catch(err => {
+                        res.send({
+                            message: "There Is Error In Retreveing Questions"
+                        })
+                    })
+                }
+                else {
+                    Faq.find({ isShown: false }).then(data => {
+                        res.send(data)
+                    }).catch(err => {
+                        res.send({
+                            message: "There Is Error In Retreveing Questions"
+                        })
+                    })
 
+                }
+            }
+
+        })
     }
+
 }
 // update question 
 exports.update = (req, res) => {
@@ -53,14 +79,7 @@ exports.update = (req, res) => {
         })
     }
     const id = req.params.id;
-    Faq.findByIdAndUpdate(id, {
-        question: req.body.question,
-        answer: req.body.answer,
-        author: req.body.author,
-        specialist: req.body.specialist,
-        isShown: true
-
-    }, { useFindAndModify: false }).then(data => {
+    Faq.findByIdAndUpdate(id, req.body, { useFindAndModify: false }).then(data => {
         if (!data) {
             res.send({
                 message: `Cannot Update question With ID=${id}. Maybe question Was Not Found!`
@@ -76,6 +95,7 @@ exports.update = (req, res) => {
             message: "Error updating Product with ID=" + id
         })
     })
+
 }
 //delete question 
 exports.delete = (req, res) => {
@@ -93,7 +113,7 @@ exports.delete = (req, res) => {
         }
     }).catch(err => {
         res.send({
-            message: "Cannot Delete Question"
+            message: `Cannot Delete Question. Maybe Question Was Not Found!`
         })
     })
 }

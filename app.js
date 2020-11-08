@@ -4,19 +4,20 @@ const mongoose = require('mongoose')
 const bodyParcer = require('body-parser')
 const jwt = require('jsonwebtoken')
 const app = express()
-const port = process.env.PORT||3000;
+const port = process.env.PORT || 3000;
 const api = '/api'
 var cors = require('cors')
 app.use(cors())
 app.use(bodyParcer.json());
 const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
-const faqs =require('./controllers/faq.controller')
-const users =require('./controllers/user.controller')
+const faqs = require('./controllers/faq.controller')
+const users = require('./controllers/user.controller')
 const carts = require('./controllers/cart.controller')
-
+const middlewares = require('./middlewares/middlewares')
 // connection to mongodb
 const db = require('./models/index')
+const { adminMiddleware } = require('./middlewares/middlewares')
 db.mongoose.connect(db.url, {
     useNewUrlParser: true,
     useUnifiedTopology: true
@@ -35,30 +36,33 @@ app.get(api + '/categories', categories.findAll)
 app.delete(api + '/categories/:id', categories.delete)
 
 //products apis
-app.post(api + '/products/:type', products.create)
+app.post(api + '/products/:type', middlewares.adminMiddleware, products.create)
 app.get(api + '/products/:category', products.findAll)
-app.delete(api + '/products/:id', products.delete)
-app.put(api + '/products/:id', products.update)
+app.get(api + '/products-admin/:category', middlewares.adminMiddleware, products.findAllAdmin)
+app.delete(api + '/products/:id', middlewares.adminMiddleware, products.delete)
+app.put(api + '/products/:id', middlewares.adminMiddleware, products.update)
 
 //faq apis
-app.post(api + '/faq',faqs.create)
-app.get(api + '/faq/:access',faqs.findAll)
-app.put(api + '/faq/:id',faqs.update)
-app.delete(api + '/faq/:id',faqs.delete)
+app.post(api + '/faq', faqs.create)
+app.get(api + '/faq', faqs.findAll)
+app.put(api + '/faq/:id', middlewares.adminMiddleware, faqs.update)
+app.delete(api + '/faq/:id', middlewares.adminMiddleware, faqs.delete)
 
 // users api
-app.post(api + '/register',users.create)
-app.post(api + '/login',users.login)
+app.post(api + '/register', users.create)
+app.post(api + '/login', users.login)
 // cart api 
-app.post (api + '/cart',carts.update)
-app.get (api + '/cart',carts.findAll)
+app.post(api + '/cart', carts.update)
+app.get(api + '/cart', carts.findAll)
+app.get(api +'/cart-admin',middlewares.adminMiddleware,carts.adminFindAll)
 
 
+// Production
 
-app.listen(port,'0.0.0.0',()=>{
+/*app.listen(port,'0.0.0.0',()=>{
     console.log("server is listening on "+port+" port");
-})
+})*/
 
-/*app.listen(3000, () => {
+app.listen(3000, () => {
     console.log(`Example app listening at http://localhost:${port}`)
-  })*/
+})

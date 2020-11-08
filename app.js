@@ -11,16 +11,14 @@ app.use(cors())
 app.use(bodyParcer.json());
 const categories = require('./controllers/category.controller')
 const products = require('./controllers/product.controller')
-<<<<<<< HEAD
 const faqs = require('./controllers/faq.controller')
 const users = require('./controllers/user.controller')
 const carts = require('./controllers/cart.controller')
 const middlewares = require('./middlewares/middlewares')
-=======
-const faqs =require('./controllers/faq.controller')
 
 
->>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
+
+
 // connection to mongodb
 const db = require('./models/index')
 const { adminMiddleware } = require('./middlewares/middlewares')

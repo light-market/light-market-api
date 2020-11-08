@@ -35,7 +35,6 @@ exports.findAll = (req, res) => {
         })
     }
     else {
-<<<<<<< HEAD
         jwt.verify(token, process.env.TOKEN_SECRET, function (err, data) {
             if (err) {
                 Faq.find({ isShown: true }).then(data => {
@@ -64,7 +63,7 @@ exports.findAll = (req, res) => {
                             message: "There Is Error In Retreveing Questions"
                         })
                     })
-=======
+
         Faq.find({ isShown: true }).skip(offset).limit(limit).then(data => {
             res.send(data)
         }).catch(err => {
@@ -73,7 +72,7 @@ exports.findAll = (req, res) => {
                 
             })
         })
->>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
+
 
                 }
             }

@@ -1,10 +1,6 @@
-const db = require('../models')
-const Cart = db.carts;
-const jwt = require('jsonwebtoken')
-//const product = require('../models/product.model')
-require('dotenv').config()
-
 exports.update = (req, res) => {
+
+    const token = req.header('accessToken');
 
     const token = req.header('accessToken');
 
@@ -104,27 +100,15 @@ exports.findAll = (req, res) => {//1
                             quantities: quantities,
                             totalPrice: data.totalPrice
                         })
-                            .catch(err => {
-                                res.status(400).send({
-                                    message: "There is error happend"
-                                })
+                        .catch(err => {
+                            res.status(400).send({
+                                message: "There is error happend"
                             })
+                        })
                     }
                 })
 
             }
         })
     }
-}
-
-
-
-exports.adminFindAll = (req, res) => {
-    Cart.find().populate("products.productID").then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(400).send({
-            message: 'There is error in retrieveing orders'
-        })
-    })
 }

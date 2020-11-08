@@ -33,7 +33,4 @@ module.exports = mongoose => {
     const Faq = mongoose.model("faq", schema);
     return Faq;
 };
-=======
-    
-}
->>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
+

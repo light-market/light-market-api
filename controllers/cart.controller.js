@@ -8,7 +8,6 @@ exports.update = (req, res) => {
 
     const token = req.header('accessToken');
 
-
     if (!token) {
         res.status(401).send("Access Denied");
     } else {
@@ -23,8 +22,6 @@ exports.update = (req, res) => {
                         const cart = new Cart({
                             userId: data.id,
                             products: req.body.products,
-                            status: 'ordered',
-                            active: false,
 
                             totalPrice: req.body.totalPrice,
                             date: Date.now()
@@ -35,9 +32,6 @@ exports.update = (req, res) => {
                                 message: "Card Saved Successfully"
                             })
 
-                        }).catch(err => {
-
-                        }).catch(err => {
                             res.status(400).send({
                                 message: "Error in Saving Cart"
                             })
@@ -66,23 +60,20 @@ exports.update = (req, res) => {
             }
 
         });
+
+
+
+
+
     }
 }
-exports.findAll = (req, res) => {//1
+exports.findAll = (req, res) => {
     const token = req.header('accessToken');
-    if (!token) {//2
+    if (!token) {
         res.status(401).send({
             message: "Access Denied"
         })
-    }//2
-    else {//3
-        jwt.verify(token, process.env.TOKEN_SECRET, function (err, dataT) {
-            if (err) {
-                res.status(401).send("Access Denied");
-            } else {
-                let cart = [];
-                let quantities = [];
-                Cart.findOne({ userId: dataT.id }).populate("products.productID").then(data => {
+    } else {
                     for (i = 0; i < data.products.length; i++) {
                         cart.push(data.products[i].productID);
                         quantities.push({
@@ -128,3 +119,4 @@ exports.adminFindAll = (req, res) => {
         })
     })
 }
+

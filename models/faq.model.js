@@ -11,7 +11,7 @@ module.exports = mongoose =>{
         })
     )
     return Faq;
-<<<<<<< HEAD
+
 }*/
 module.exports = mongoose => {
     var schema = mongoose.Schema(
@@ -33,4 +33,8 @@ module.exports = mongoose => {
     const Faq = mongoose.model("faq", schema);
     return Faq;
 };
+
+
+    
+}
 

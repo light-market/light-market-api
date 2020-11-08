@@ -5,7 +5,13 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 exports.update = (req, res) => {
+<<<<<<< HEAD
     const token = req.header('accessToken');
+=======
+
+    const token = req.header('accessToken');
+    
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
     if (!token) {
         res.status(401).send("Access Denied");
     } else {
@@ -20,7 +26,11 @@ exports.update = (req, res) => {
                         const cart = new Cart({
                             userId: data.id,
                             products: req.body.products,
+<<<<<<< HEAD
                             status: 'ordered',
+=======
+                            active: false,
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
                             totalPrice: req.body.totalPrice,
                             date: Date.now()
 
@@ -29,8 +39,13 @@ exports.update = (req, res) => {
                             res.send({
                                 message: "Card Saved Successfully"
                             })
+<<<<<<< HEAD
 
                         }).catch(err => {
+=======
+                            
+                        }).catch(err=>{
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
                             res.status(400).send({
                                 message: "Error in Saving Cart"
                             })
@@ -79,15 +94,24 @@ exports.findAll = (req, res) => {
                 let cart = [];
                 let quantities = [];
                 Cart.findOne({ userId: dataT.id }).populate("products.productID").then(data => {
+<<<<<<< HEAD
                     for (i = 0; i < data.products.length; i++) {
                         cart.push(data.products[i].productID);
                         quantities.push({
                             productID: data.products[i].productID.id,
                             quantity: data.products[i].quantity
+=======
+                    for (i=0;i<data.products.length;i++){
+                        cart.push(data.products[i].productID);
+                        quantities.push({
+                            productID : data.products[i].productID.id,
+                            quantity : data.products[i].quantity
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
                         })
 
                     }
                     res.send({
+<<<<<<< HEAD
                         cart: cart,
                         quantities: quantities,
                         totalPrice: data.totalPrice
@@ -95,6 +119,15 @@ exports.findAll = (req, res) => {
                 }).catch(err => {
                     res.status(400).send({
                         message: "There is error happend"
+=======
+                        cart : cart,
+                        quantities : quantities,
+                        totalPrice :data.totalPrice
+                    })
+                }).catch(err => {
+                    res.status(400).send({
+                        message : "There is error happend"
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177
                     })
                 })
             }
@@ -103,6 +136,7 @@ exports.findAll = (req, res) => {
     }
 
 }
+<<<<<<< HEAD
 exports.adminFindAll = (req, res) => {
     Cart.find().populate("products.productID").then(data => {
         res.send(data);
@@ -112,3 +146,5 @@ exports.adminFindAll = (req, res) => {
         })
     })
 }
+=======
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177

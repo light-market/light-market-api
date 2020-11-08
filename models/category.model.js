@@ -9,4 +9,9 @@ module.exports = mongoose => {
         })
     )
     return Category;
+<<<<<<< HEAD
 }
+=======
+    
+}
+>>>>>>> 863a73fba888530dac1a8779e040fb333b1b8177

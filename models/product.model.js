@@ -28,6 +28,7 @@ module.exports = mongoose => {
         quantity: Number,
         price: Number,
         secondPrice: Number
+        
       }
     );
   

@@ -1,12 +1,9 @@
-const db = require('../models')
-const Cart = db.carts;
-const jwt = require('jsonwebtoken')
-//const product = require('../models/product.model')
-require('dotenv').config()
-
 exports.update = (req, res) => {
 
     const token = req.header('accessToken');
+
+    const token = req.header('accessToken');
+
 
     if (!token) {
         res.status(401).send("Access Denied");
@@ -22,6 +19,8 @@ exports.update = (req, res) => {
                         const cart = new Cart({
                             userId: data.id,
                             products: req.body.products,
+                            status: 'ordered',
+                            active: false,
 
                             totalPrice: req.body.totalPrice,
                             date: Date.now()
@@ -32,6 +31,9 @@ exports.update = (req, res) => {
                                 message: "Card Saved Successfully"
                             })
 
+                        }).catch(err => {
+
+                        }).catch(err => {
                             res.status(400).send({
                                 message: "Error in Saving Cart"
                             })
@@ -60,20 +62,23 @@ exports.update = (req, res) => {
             }
 
         });
-
-
-
-
-
     }
 }
-exports.findAll = (req, res) => {
+exports.findAll = (req, res) => {//1
     const token = req.header('accessToken');
-    if (!token) {
+    if (!token) {//2
         res.status(401).send({
             message: "Access Denied"
         })
-    } else {
+    }//2
+    else {//3
+        jwt.verify(token, process.env.TOKEN_SECRET, function (err, dataT) {
+            if (err) {
+                res.status(401).send("Access Denied");
+            } else {
+                let cart = [];
+                let quantities = [];
+                Cart.findOne({ userId: dataT.id }).populate("products.productID").then(data => {
                     for (i = 0; i < data.products.length; i++) {
                         cart.push(data.products[i].productID);
                         quantities.push({
@@ -95,11 +100,11 @@ exports.findAll = (req, res) => {
                             quantities: quantities,
                             totalPrice: data.totalPrice
                         })
-                            .catch(err => {
-                                res.status(400).send({
-                                    message: "There is error happend"
-                                })
+                        .catch(err => {
+                            res.status(400).send({
+                                message: "There is error happend"
                             })
+                        })
                     }
                 })
 
@@ -107,16 +112,3 @@ exports.findAll = (req, res) => {
         })
     }
 }
-
-
-
-exports.adminFindAll = (req, res) => {
-    Cart.find().populate("products.productID").then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(400).send({
-            message: 'There is error in retrieveing orders'
-        })
-    })
-}
-

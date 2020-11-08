@@ -1,9 +1,9 @@
 const db = require('../models');
 const Product = db.products;
-
+const jwt = require('jsonwebtoken')
+require('dotenv').config()
 //create new product 
 exports.create = (req, res) => {
-    //req.body all
     const product = new Product({
         type: req.params.type,
         name: req.body.name,
@@ -15,20 +15,31 @@ exports.create = (req, res) => {
         
     })
     product.save(product).then(data => {
-        res.send(data);
+        res.send({
+            message: "The Product Saved Successfully"
+        });
     }).catch(err => {
         //search most common http status code
         res.status(400).send({
-            message: "There Is Error In Saving Product"+err
+            message: "There Is Error In Saving Product" + err
         })
     })
+
 }
 //retreive category products
 exports.findAll = (req, res) => {
     const type = req.params.category;
-    const offset = +req.query.offset;
-    const limit = +req.query.limit;
-    Product.find({ type: type }).skip(offset).limit(limit).then(data => {
+    Product.find({ type: type }).then(data => {
+        res.send(data)
+    }).catch(err => {
+        res.send({
+            message: err.message || "there is error in reteriving categories"
+        })
+    })
+}
+exports.findAllAdmin = (req, res) => {
+    const type = req.params.category;
+    Product.find({ type: type }).then(data => {
         res.send(data)
     }).catch(err => {
         res.send({

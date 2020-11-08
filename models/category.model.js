@@ -9,5 +9,4 @@ module.exports = mongoose => {
         })
     )
     return Category;
-    
-}
+

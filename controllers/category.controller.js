@@ -6,10 +6,13 @@ exports.create = (req, res) => {
     const category = new Category({
         name: req.body.name,
         imageUrl: req.body.imageUrl,
+        describtion : req.body.describtion,
         slag: req.body.slag
     })
     category.save(category).then(data => {
-        res.send(data);
+        res.send({
+            message : 'Category Saved Successfully'
+        });
     }).catch(err => {
         res.send({
             message: "There Is Error In Saving Category"
@@ -45,6 +48,30 @@ exports.delete = (req, res) => {
     }).catch(err => {
         res.send({
             message: "Cannot Delete Category"
+        })
+    })
+}
+exports.update = (req,res)=>{
+    if (!req.body) {
+        res.send({
+            message: "Data To Update Can Not Be Empty!"
+        })
+    }
+    const id = req.body.category.id
+    Category.findByIdAndUpdate(id, req.body.category, { useFindAndModify: false }).then(data => {
+        if (!data) {
+            res.send({
+                message: `Cannot Category Product With ID=${id}. Maybe Product Was Not Found!`
+            })
+        }
+        else {
+            res.send({
+                message: "Category Updated Successfully"
+            })
+        }
+    }).catch(err => {
+        res.send({
+            message: "Error updating Category with ID=" + id
         })
     })
 }

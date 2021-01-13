@@ -63,17 +63,6 @@ exports.findAll = (req, res) => {
                             message: "There Is Error In Retreveing Questions"
                         })
                     })
-
-        Faq.find({ isShown: true }).skip(offset).limit(limit).then(data => {
-            res.send(data)
-        }).catch(err => {
-            res.send({
-                message: "There Is Error In Retreveing Questions"
-                
-            })
-        })
-
-
                 }
             }
 

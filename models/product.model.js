@@ -1,5 +1,5 @@
-/*const { mongoose } = require(".");
-module.exports = mongoose => {
+
+/*module.exports = mongoose => {
     var schema =mongoose.Schema({
         type: String,
         name: String,

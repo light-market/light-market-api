@@ -36,9 +36,10 @@ db.mongoose.connect(db.url, {
 app.get('/', (req, res) => res.send('Hello World!'))
 
 //categories apis
-app.post(api + '/categories', categories.create)
+app.post(api + '/categories',middlewares.adminMiddleware, categories.create)
 app.get(api + '/categories', categories.findAll)
-app.delete(api + '/categories/:id', categories.delete)
+app.delete(api + '/categories/:id',middlewares.adminMiddleware,categories.delete)
+app.put(api + '/categories',middlewares.adminMiddleware,categories.update)
 
 //products apis
 app.post(api + '/products/:type', middlewares.adminMiddleware, products.create)
@@ -57,17 +58,23 @@ app.delete(api + '/faq/:id', middlewares.adminMiddleware, faqs.delete)
 app.post(api + '/register', users.create)
 app.post(api + '/login', users.login)
 // cart api 
-app.post(api + '/cart', carts.update)
 app.get(api + '/cart', carts.findAll)
+app.post(api + '/cart', carts.addToCart)
 app.get(api +'/cart-admin',middlewares.adminMiddleware,carts.adminFindAll)
-
+app.post(api + '/cart-update',carts.updateAmount)
+app.put(api + '/cart/editId',carts.changeID)
+app.put(api + '/cart',carts.order)
+app.put(api + '/cart/deliveryDate',middlewares.adminMiddleware,carts.setDate)
+app.delete(api + '/cart/:id',middlewares.adminMiddleware,carts.remove)
+app.get(api + '/userOrders',carts.findOrders)
+app.put(api +'/orderDelivered/:id',middlewares.adminMiddleware,carts.setDeliverd)
 
 // Production
 
-/*app.listen(port,'0.0.0.0',()=>{
+app.listen(port,'0.0.0.0',()=>{
     console.log("server is listening on "+port+" port");
-})*/
-
+})
+/*
 app.listen(3000, () => {
     console.log(`Example app listening at http://localhost:${port}`)
-})
+})*/
